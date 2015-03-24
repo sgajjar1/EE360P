@@ -5,3 +5,4 @@ Implement Lamport clocks
 Implement Lamport mutex
 Modify TCP server to use Lamport mutexes
 Implement server 'crash'
+Implement client fallback best server
