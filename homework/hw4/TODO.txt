@@ -6,3 +6,8 @@ Implement Lamport mutex
 Modify TCP server to use Lamport mutexes
 Implement server 'crash'
 Implement client fallback best server
+
+1) client connects to closest server
+a) if not successful within 100 ms, contacts next closest server -> keeps looping until successful connection
+
+2)servers that come up after crashing need to resyncrhonize with existing servers
