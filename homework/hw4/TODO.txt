@@ -8,6 +8,34 @@ Implement server 'crash'
 Implement client fallback best server
 
 1) client connects to closest server
-a) if not successful within 100 ms, contacts next closest server -> keeps looping until successful connection
+  a) if not successful within 100 ms, contacts next closest server -> keeps looping until successful connection
 
 2)servers that come up after crashing need to resyncrhonize with existing servers
+
+3) server input:
+  a) FIRST LINE: server's unique id, total # of server instances, # total of books in library
+  b) n (# of server instances) lines of the following: <ipaddress>:<portumber>, ith address line denotes server with id i
+    i) if ipaddress matches localhost, then program start a server on the given portnumber
+else assume server is already present and running
+  c) rest of input = commands
+    i) crash k ∆
+      A) k = non-negative, tells server to become unresponsive after responding to kth client command
+      B) k counted from beginning of server's latest start (private counter)
+        i) if k > private counter, server immediately crashes
+        ii) else crash when private counter reaches k
+      C) ∆ duration in ms for which server is unresponsive to all clients/servers (Thread.sleep/losing all stored data)
+      D) recovers from crash after time and resets k to 0
+
+4) client input
+  a) FIRST LINE: ci (client id), n (# of servers present)
+  b) next n lines: <ipaddress: port>
+    i) order of appearance defines proximity to client, must connect in this order
+  c) rest of input = commands
+    i) bi reverse|return
+      A) send "<clientid> bi reserve|return" to server (closest alive server)
+        i) "c1 b1 reserve" then "c2 b1 reserve" dooesnt guarantee b1 must always be issued to c1
+    ii) sleep ∆
+      A) client becomes dormant (using Thread.sleep) for ∆ ms, immediately after receiving command [NO OUTPUT]
+
+5) Output:
+  a) client prints result of commands issued, l commands sent = l lines printed
