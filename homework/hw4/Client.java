@@ -29,46 +29,22 @@ public class Client {
 					/* create book command for server */
 					String msg = new String(clientId + " " + bookId + " " + command + "\n");
 					
-					/* we're going to use one Interface for both UDP and TCP */
+					/* we're going to use one Interface, which supports both UDP and TCP */
 					Closeable client = null;
 					Scanner netInput;
 					
 					try {
-						if (proto.equals("T")) {
-							/* handle TCP connection to server */
-							Socket tcpClient = new Socket(addr, serverPort);
-							client = tcpClient;
-							tcpClient.setSoTimeout(2000);
+						/* handle TCP connection to server */
+						Socket tcpClient = new Socket(addr, serverPort);
+						client = tcpClient;
+						tcpClient.setSoTimeout(2000);
 
-							PrintWriter netOut = new PrintWriter(tcpClient.getOutputStream());
-							netInput = new Scanner(tcpClient.getInputStream());
-	
-							netOut.println(msg);
-							netOut.flush();
-						} else if (proto.equals("U")) {
-							/* handle UDP connection to server */
-							DatagramSocket udpClient = new DatagramSocket();
-							client = udpClient;
-							udpClient.setSoTimeout(2000);
-							
-							byte[] sendBuf = msg.getBytes();
-							DatagramPacket sendP = new DatagramPacket(sendBuf,
-									sendBuf.length, addr, serverPort);
-							
-							/* ... packets traveling over the Internet here ... */
-							
-							byte[] recvBuf = new byte[1024];
-							DatagramPacket recvP = new DatagramPacket(recvBuf,
-									recvBuf.length, addr, serverPort);
-							
-							udpClient.send(sendP);
-							udpClient.receive(recvP);
-	
-							String received = new String(recvP.getData(), 0, recvP.getLength());
-							netInput = new Scanner(received);
-						} else {
-							continue;
-						}
+						PrintWriter netOut = new PrintWriter(tcpClient.getOutputStream());
+						netInput = new Scanner(tcpClient.getInputStream());
+
+						netOut.println(msg);
+						netOut.flush();
+
 						String smsg;
 						if (netInput.findInLine("free") != null) {
 							smsg = "free ";

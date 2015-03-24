@@ -14,7 +14,6 @@ public class Server {
 
 		/* initialize server */
 		CAPACITY = in.nextInt();
-		int udpPort = in.nextInt();
 		int tcpPort = in.nextInt();
 		in.close();
 
@@ -39,71 +38,23 @@ public class Server {
 				}
 			}
 		});
-
-		/* set up UDP thread using HandleConnection */
-		Thread udpThread = new Thread(new Runnable() {
-			public void run() {
-				DatagramSocket server = null;
-				try {
-					server = new DatagramSocket(udpPort);
-					while (true) {
-						/* UDP requires a socket and packet */
-						DatagramPacket p = new DatagramPacket(new byte[1024], 1024);
-						server.receive(p);
-
-						Thread t = new HandleConnection(store, server, p);
-						t.start();
-					}
-				} catch (Exception e) {} finally {
-					if (server != null) {
-						server.close();
-					}
-				}
-			}
-		});
-
 		tcpThread.start();
-		udpThread.start();
 	}
 
 	public static class HandleConnection extends Thread {
 
 		private ConcurrentHashMap<Integer, Integer> store;
 		private Socket tcpServer = null;
-		
-		/* extra info needed for UDP packets */
-		private DatagramSocket udpServer = null;
-		private SocketAddress udpAddr = null;
-		private byte[] udpData = null;
 
 		public HandleConnection(ConcurrentHashMap<Integer, Integer> bookstore, Socket server) {
 			store = bookstore;
 			tcpServer = server;
 		}
 
-		public HandleConnection(ConcurrentHashMap<Integer, Integer> bookstore,
-				DatagramSocket server,
-				DatagramPacket packet) {
-			store = bookstore;
-			udpServer = server;
-
-			/* don't bother storing Datagram packet, we can just harvest important info */
-			udpAddr = packet.getSocketAddress();
-			udpData = packet.getData();
-		}
-
 		public void run() {
 			try {
-				Scanner netInput;
-				OutputStream os;
-				if (tcpServer != null) {
-					netInput = new Scanner(tcpServer.getInputStream());
-					os = tcpServer.getOutputStream();
-				} else {
-					InputStream is = new ByteArrayInputStream(udpData);
-					netInput = new Scanner(is);
-					os = new ByteArrayOutputStream();
-				}
+				Scanner netInput = new Scanner(tcpServer.getInputStream());
+				OutputStream os = tcpServer.getOutputStream();
 				PrintWriter netOut = new PrintWriter(os);
 
 				int clientId = netInput.nextInt();
@@ -130,26 +81,14 @@ public class Server {
 
 				/* always flush your output streams */
 				netOut.flush();
-				if (udpServer != null) {
-					/* UDP requires explicitly sending the output stream as a byte[] */
-					byte[] tmp = ((ByteArrayOutputStream) os).toByteArray();
-					DatagramPacket p = new DatagramPacket(tmp, tmp.length, udpAddr);
-					udpServer.send(p);
-				}
 
 				/* close all streams */
 				netOut.close();
 				netInput.close();
 			} catch (Exception e) {} finally {
-				/*
-				 * Should have mirrored client implementation and used a Closeable interface.
-				 * This code works perfectly fine, it's just inelegant.
-				 */
-				if (tcpServer != null) {
-					try {
-						tcpServer.close();
-					} catch (IOException e) { }
-				}
+				try {
+					tcpServer.close();
+				} catch (IOException e) { }
 			}
 		}
 	}
