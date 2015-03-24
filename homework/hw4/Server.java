@@ -41,6 +41,44 @@ public class Server {
 		tcpThread.start();
 	}
 
+	public static class Clock {
+		private int m, id;
+		private int[] v;
+
+		public Clock(int maxInstances, int self) {
+			m = maxInstances;
+			id = self;
+			v = new int[m];
+			for (int i = 0; i < m; i++) {
+				v[i] = 0;
+			}
+			v[id] = 1;
+		}
+
+		void update() {
+			v[id]++;
+		}
+
+		void recieve(int[] r) {
+			for (int i = 0; i < m; i++) {
+				if (r[i] > v[i]) {
+					v[i] = r[i];
+				}
+			}
+			v[id]++;
+		}
+
+		int[] send() {
+			v[id]++;
+			return v;
+		}
+	}
+
+	public static class LamportMutex {
+		/* send some messages */
+		/* using server Clock */
+	}
+
 	public static class HandleConnection extends Thread {
 
 		private ConcurrentHashMap<Integer, Integer> store;

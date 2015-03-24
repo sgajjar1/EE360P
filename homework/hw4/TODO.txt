@@ -1,7 +1,7 @@
 -- Remove UDP server/client code
 Update server input parsing
 Update client input parsing
-Implement Lamport clocks
+-- Implement Lamport clocks
 Implement Lamport mutex
 Modify TCP server to use Lamport mutexes
 Implement server 'crash'
