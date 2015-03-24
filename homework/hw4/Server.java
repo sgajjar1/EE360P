@@ -4,7 +4,6 @@ public class Server {
 	private static int CAPACITY;
 
 	public static void main(String[] args) {
-		try {testConnectivity();} catch (Exception e) {}
 		/* 
 		 * Store books in a HashMap of <Book, Client>
 		 * Book to Client is one-to-one. Client to Book is one-to-many.
@@ -153,25 +152,6 @@ public class Server {
 				}
 			}
 		}
-	}
-	
-
-	/*
-	 * This method attempts to test network connectivity and tries sending a packet.
-	 * Should be removed for submission.
-	 */
-	public static void testConnectivity() throws Exception {
-		InetAddress addr = InetAddress.getByName("lf.lc"); /* apartment server */
-		Socket client = new Socket(addr, 7776);
-		client.setSoTimeout(1000);
-
-		PrintWriter netOut = new PrintWriter(client.getOutputStream());
-		/* some nice test data, helpful for debugging */
-		netOut.print("Server: " + Math.random());
-		netOut.print("\tSystem time: " + System.currentTimeMillis());
-		netOut.println("\tLocal address: " + client.getLocalSocketAddress());
-		netOut.flush();
-		client.close();
 	}
 
 }
