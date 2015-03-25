@@ -20,7 +20,7 @@ public class Server {
 
 		InetSocketAddress ip_port_combos[numServers];
 
-		for (int i = 0; i < numServers; i++) {
+		for (int i = 0; i < num_servers; i++) {
 			String ip_port[] = stdin.nextLine().trim().split(":");
 			String ip = ip_port[0];
 			int port = Integer.parseInt(ip_port[1]);
