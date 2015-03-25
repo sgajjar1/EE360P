@@ -13,6 +13,22 @@ public class Server {
 		Scanner in = new Scanner(System.in);
 
 		/* initialize server */
+		int serverId = in.nextInt();
+		int num_servers = in.nextInt();
+		int num_books = in.nextInt();
+		stdin.nextLine(); // Consume newline left-over
+
+		InetSocketAddress ip_port_combos[numServers];
+
+		for (int i = 0; i < numServers; i++) {
+			String ip_port[] = stdin.nextLine().trim().split(":");
+			String ip = ip_port[0];
+			int port = Integer.parseInt(ip_port[1]);
+			InetAddress addr = InetAddress.getByName(ip);
+			ip_port_combos[i] = new InetSocketAddress(addr, port);
+		}
+
+		/* initialize server */
 		CAPACITY = in.nextInt();
 		int tcpPort = in.nextInt();
 		in.close();

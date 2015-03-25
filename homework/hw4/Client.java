@@ -5,7 +5,21 @@ public class Client {
 	public static void main(String[] args) {
 		Scanner stdin = new Scanner(System.in);
 
+		/* initialize client */
 		int clientId = stdin.nextInt();
+		int numServers = stdin.nextInt(); 
+		stdin.nextLine(); // Consume newline left-over
+
+		InetSocketAddress ip_port_combos[numServers];
+
+		for (int i = 0; i < numServers; i++) {
+			String ip_port[] = stdin.nextLine().trim().split(":");
+			String ip = ip_port[0];
+			int port = Integer.parseInt(ip_port[1]);
+			InetAddress addr = InetAddress.getByName(ip);
+			ip_port_combos[i] = new InetSocketAddress(addr, port);
+		}
+
 
 		InetAddress addr = null;
 		String host = stdin.nextLine().trim();
