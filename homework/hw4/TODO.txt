@@ -15,7 +15,7 @@ Implement client fallback best server
 3) server input:
   a) FIRST LINE: server's unique id, total # of server instances, # total of books in library
   b) n (# of server instances) lines of the following: <ipaddress>:<portumber>, ith address line denotes server with id i
-    i) if ipaddress matches localhost, then program start a server on the given portnumber
+    i) if ipaddress matches localhost, then program starts a server on the given portnumber
 else assume server is already present and running
   c) rest of input = commands
     i) crash k ∆
