@@ -28,9 +28,6 @@ public class Server {
 			ip_port_combos[i] = new InetSocketAddress(addr, port);
 		}
 
-		/* initialize server */
-		CAPACITY = in.nextInt();
-		int tcpPort = in.nextInt();
 		in.close();
 
 		/* set up TCP thread using HandleConnection */
