@@ -7,19 +7,17 @@ public class Client {
 
 		/* initialize client */
 		int clientId = stdin.nextInt();
-		int numServers = stdin.nextInt(); 
+		int instances = stdin.nextInt();
 		stdin.nextLine(); // Consume newline left-over
 
-		InetSocketAddress ip_port_combos[numServers];
+		InetSocketAddress[] servers = new InetSocketAddress[instances];
 
-		for (int i = 0; i < numServers; i++) {
+		for (int i = 0; i < instances; i++) {
 			String ip_port[] = stdin.nextLine().trim().split(":");
 			String ip = ip_port[0];
 			int port = Integer.parseInt(ip_port[1]);
-			InetAddress addr = InetAddress.getByName(ip);
-			ip_port_combos[i] = new InetSocketAddress(addr, port);
+			servers[i] = new InetSocketAddress(ip, port);
 		}
-
 
 		InetAddress addr = null;
 		String host = stdin.nextLine().trim();
